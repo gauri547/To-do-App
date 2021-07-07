@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+
+	{% block contain %}
+
+		<h3>What are you doing today?</h3>
+		<form action="/" method="post">
+		<p>
+			{% csrf_token %}
+			{{ form.title }}
+			<button type="submit">Add</button>
+		</p>
+
+		</form>
+
+		<h3>Todo</h3>
+		<!-- To do list items  -->
+		<ul id="incomplete-tasks" class="drop-items">
+			{% for items in tasks %}
+			<li>
+			<label>{{ items.title }}</label>
+			<button class="edit" onclick="document.location='{% url 'update' items.id %}'">Edit</button>
+			<form method="POST" action="{% url 'delete_task' items.id %}">
+				{% csrf_token %}
+			<button class="delete" type="submit">Delete</button>
+			</form>
+			<small style="margin:6px; padding:2px;">Added at {{ items.created }}</small>
+			</li>
+			{% empty %}
+
+			<h5 style="color:lightgrey;text-align:center; text-shadow: 2px 2px 5px black;">Tap the add button above to create a task.</h5>
+
+			{% endfor %}
+
+		<h3>Completed</h3>
+		<ul id="completed-tasks" class="drop-completed">
+		{% for items in tasks %}
+			<li>
+		{% if items.complete == True %}
+				<input type="checkbox" checked>
+				<label>{{ items.title }}</label>
+			<button class="edit" onclick="document.location='{% url 'update' items.id %}'">Edit</button>
+			<button class="delete" onclick="document.location='{% url 'delete_task' items.id %}'">Delete</button>
+			<small style="margin:6px; padding:2px;">Added at {{ items.created }}</small>
+		{% endif %}
+			</li>
+		{% endfor %}
+
+		</ul>
+		</ul>
+	</div>
+
+    {% endblock contain %}
